@@ -1,0 +1,370 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Mencari Rumah — Rental Leads</title>
+<style>
+:root{
+  --bg:#0b0f19; --card:#121826; --muted:#a0a8c0; --text:#eef1ff;
+  --chip-bg:#1b2235; --chip-stroke:#2a3450;
+  --price:#ffedc2; --price-stroke:#ffcf70;
+  --loc:#d7f5e5; --loc-stroke:#66d39a;
+  --brand:#4f7cff; --danger:#ff5d5d; --ok:#37d292;
+}
+*{box-sizing:border-box}
+html, body{width:100%; height:100%; margin:0; padding:0; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none}
+body{background:var(--bg); color:var(--text); font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial; -webkit-font-smoothing:antialiased}
+input, textarea, select, button{-webkit-user-select:text; user-select:text}
+
+.wrap{max-width:1100px; margin:24px auto 100px; padding:0 16px}
+h1.big{font-size:clamp(24px, 6vw, 34px); margin:8px 0 0; font-weight:800}
+h2.small{font-size:clamp(18px, 5vw, 22px); margin:8px 0 16px; font-weight:700; opacity:.9}
+.time{color:var(--muted); font-size:14px; margin-bottom:8px}
+
+.toolbar{position:sticky; top:0; background:linear-gradient(180deg, rgba(11,15,25,.97), rgba(11,15,25,.8)); backdrop-filter:blur(8px); z-index:5; padding:12px 16px; border-bottom:1px solid #1f2638}
+.toolbar .inner{display:flex; gap:12px; max-width:1100px; margin:0 auto; flex-wrap:wrap}
+input[type=search], input[type=text]{flex:1; min-width:150px; padding:10px 12px; border-radius:12px; border:1px solid #24314d; background:#0e1424; color:var(--text); font-size:16px; -webkit-appearance:none; appearance:none}
+select{padding:10px 12px; border-radius:12px; border:1px solid #24314d; background:#0e1424; color:var(--text); -webkit-appearance:none; appearance:none}
+.btn{padding:8px 12px; border-radius:10px; background:var(--brand); color:white; text-decoration:none; border:1px solid transparent; cursor:pointer; font-size:14px; -webkit-user-select:none; user-select:none; -webkit-tap-highlight-color:transparent; transition:all .2s ease}
+.btn:hover{opacity:0.9; transform:translateY(-1px)}
+.btn:active{transform:translateY(0); opacity:0.8}
+.btn.outline{background:transparent; border-color:#2b3a63}
+.btn.outline:hover{background:rgba(79, 124, 255, 0.1)}
+.btn.muted{background:#273352; color:#cfe; border-color:#2b3a63}
+.btn.muted:hover{background:#34435a}
+.btn.danger{background:var(--danger)}
+.btn.danger:hover{opacity:0.9}
+.btn.ok{background:var(--ok); color:#00361a}
+.btn.ok:hover{opacity:0.9}
+
+.card{background:var(--card); border:1px solid #1f2638; border-radius:16px; padding:16px; margin:14px 0; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.card:hover{border-color:#2b3a63}
+.card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; flex-wrap:wrap}
+.title{display:flex; align-items:flex-start; gap:10px; flex:1; flex-wrap:wrap}
+.name{font-weight:700; font-size:clamp(16px, 4vw, 18px)}
+.chips{display:flex; gap:6px; flex-wrap:wrap}
+.chip{display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; border:1px solid var(--chip-stroke); background:var(--chip-bg); color:#d7def7; font-size:12px}
+.chip-price{background:var(--price); color:#3a2a00; border-color:var(--price-stroke)}
+.chip-loc{background:var(--loc); color:#00361a; border-color:var(--loc-stroke)}
+.chip-note{opacity:.85}
+.msg{color:#d7def7; margin:0; font-size:clamp(14px, 3vw, 16px)}
+.count{opacity:.8; font-size:14px}
+
+.form{display:flex; gap:8px; flex-direction:column; margin:10px 0 18px}
+.form input{width:100%; padding:12px; border-radius:12px; border:1px solid #24314d; background:#0e1424; color:var(--text); font-size:16px; -webkit-appearance:none; appearance:none}
+.form-actions{display:flex; gap:8px; flex-wrap:wrap}
+.form-actions .btn{flex:1; min-width:100px}
+.hidden{display:none}
+.controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+
+.section-head{display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; flex-wrap:wrap; gap:12px}
+
+.actions{display:flex; gap:6px; align-items:center}
+.iconbtn{background:none; border:none; color:var(--text); cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:background .2s; -webkit-tap-highlight-color:transparent; min-height:44px; min-width:44px}
+.iconbtn:hover{background:rgba(255,255,255,.1)}
+.iconbtn:active{background:rgba(255,255,255,.2)}
+.iconbtn svg{width:20px; height:20px; stroke:currentColor; fill:none; stroke-width:2}
+.iconbtn.danger{color:var(--danger)}
+.iconbtn.ok{color:var(--ok)}
+
+.fab{position:fixed; right:16px; bottom:16px; width:56px; height:56px; border-radius:50%; background:var(--ok); color:#00361a; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); z-index:30; font-size:28px; font-weight:bold; -webkit-tap-highlight-color:transparent}
+.fab:active{transform:scale(.95)}
+
+.modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:40; display:none; align-items:flex-end; -webkit-user-select:none; user-select:none}
+.modal-overlay.open{display:flex}
+.modal-content{background:var(--card); border-top:1px solid #1f2638; border-radius:20px 20px 0 0; width:100%; max-width:600px; padding:20px; max-height:90vh; overflow-y:auto; -webkit-user-select:auto; user-select:auto}
+.modal-content .form-actions{justify-content:flex-end}
+
+@media (max-width:480px){
+  .wrap{margin:24px auto 100px}
+  .toolbar .inner{gap:8px}
+  input[type=search], input[type=text]{min-width:100px; font-size:16px}
+  .btn{padding:8px 10px; font-size:13px; min-height:44px}
+  .section-head{flex-direction:column; align-items:stretch}
+  .controls{flex-direction:column}
+  .controls input{width:100%}
+  .card{padding:12px; margin:10px 0}
+  .card-head{gap:8px}
+  .title{gap:8px}
+  .name{font-size:16px}
+  .msg{font-size:14px}
+  .actions{gap:4px}
+  .iconbtn svg{width:18px; height:18px}
+  .modal-content{border-radius:16px 16px 0 0; padding:16px}
+}
+
+@media (min-width:700px){
+  .modal-overlay{align-items:center; justify-content:center}
+  .modal-content{border-radius:16px; max-width:500px; width:90%}
+}
+</style>
+
+<div class="toolbar">
+  <div class="inner">
+    <input id="q" type="search" placeholder="Search name, message, location…">
+    <select id="sort">
+      <option value="new">Sort: Default</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+    </select>
+    <button class="btn outline" id="toggle-archived">Show Archived</button>
+    <a class="btn muted" id="export">Export JSON</a>
+  </div>
+</div>
+
+<div class="wrap" id="app">
+  <div class="time">Last Updated 2025-11-13 12:00</div>
+  <h1 class="big">Mencari Rumah</h1>
+  <div class="section-head">
+    <h2 class="small">Rental Leads <span class="count" id="count"></span></h2>
+  </div>
+
+  <section id="list"></section>
+
+  <div id="archived-wrap" class="hidden">
+    <div class="section-head" style="margin-top:24px">
+      <h2 class="small">Archived</h2>
+    </div>
+    <section id="archived"></section>
+  </div>
+</div>
+
+<button class="fab" id="open-add">+</button>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal-content">
+    <h3 style="margin-top:0">Add New Lead</h3>
+    <div class="form">
+      <input id="name" type="text" placeholder="Name">
+      <input id="message" type="text" placeholder="Message (auto-detect price & location)">
+      <input id="phone" type="text" placeholder="+60…">
+      <input id="note" type="text" placeholder="Note (optional)">
+      <div class="form-actions">
+        <button class="btn outline" id="close-modal">Cancel</button>
+        <button class="btn ok" id="add">Save Lead</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEED = [{"name": "Muhd Farhan", "message": "Boleh whatsapp saya ada units available", "phone_norm": "+60145067082", "note": ""}, {"name": "Dura Asnidura", "message": "Sy ada 4 bedrooms complete furnished. Townvilla with garden. Kemasukan segera 1900 shj.", "phone_norm": "+60192927426", "note": ""}, {"name": "Rafik Mohd", "message": "Sanderling Lakefront Residence @ Cyberjaya, New Condo Fully Furnished with Greenery View. Availability: November onwards. RENTAL PRICE: RM2200 (VTO).", "phone_norm": "+601127090426", "note": "IQI REALTY SDN BHD"}, {"name": "Rafik Mohd", "message": "Lakefront Homes @ Cyberjaya. FULLY FURNISHED HOUSE FOR RENT. RENTAL PRICE: RM1950.", "phone_norm": "+601127090426", "note": "IQI REALTY SDN BHD"}, {"name": "Rafik Mohd", "message": "Lakefront Homes @ Cyberjaya. NICE FURNISHED HOUSE FOR RENT. Partially furnished. Availability: October onwards. RENTAL PRICE: RM2000 (VTO).", "phone_norm": "+601127090426", "note": "IQI REALTY SDN BHD"}, {"name": "Azuan Wan", "message": "Cassia, Cyberjaya. Fully furnished. November move in. RM1600.", "phone_norm": "+60163837412", "note": "wasap.my link in comment"}, {"name": "Izac Kah Hao", "message": "Casa Green 3 bedroom house for rent RM1900.", "phone_norm": "+60126130040", "note": ""}, {"name": "Cik Puan Aini", "message": "Cybersouth. Fully furnish. RM1950 / 1.9k.", "phone_norm": "", "note": ""}, {"name": "Azuan Wan", "message": "Duplex unit Solstice Pangea, Cyberjaya. 2 bilik, fully furnished. Ready move in. RM2300.", "phone_norm": "+60163837412", "note": "wasap.my link in comment"}, {"name": "Audra Florence", "message": "Cybersouth City. Between RM1900–RM2000. Fully furnish.", "phone_norm": "+60182651723", "note": ""}, {"name": "Propro You", "message": "Double Storey House Kita Bayu Cybersouth 4r3b with kitchen cabinet RM1600.", "phone_norm": "+601167408080", "note": ""}, {"name": "Ruby Dzul", "message": "Aspire Residensi Cyberjaya partially furnished RM1600.", "phone_norm": "+601167408080", "note": ""}, {"name": "Intan Aaziz", "message": "PROPERTY FOR RENT – CYBERJAYA AREA. Lakefront PR1MA RM1,800; Lakefront Homes RM2,000; Aspire Residence RM1,200; all units in Cyberjaya.", "phone_norm": "+601113220838", "note": "wasap.my link in comment"}, {"name": "Putih Bersih", "message": "LAKEFRONT HOMES, CYBERJAYA – Fully furnished 3 bedrooms 2 bathrooms, 1,010 sqft. Rental RM1,900 (nego).", "phone_norm": "+60126495321", "note": "WhatsApp link provided"}, {"name": "Putih Bersih", "message": "LAKEFRONT HOMES, CYBERJAYA – Fully furnished. Rental RM1,900 (nego). Contact Sya Nas.", "phone_norm": "+60126495321", "note": "WhatsApp link provided"}, {"name": "Farhani Ramli", "message": "The Arc Cyberjaya. 3 bilik 2 bilik air, fully furnished. Sewa RM1,850. Deposit 2+1, utiliti 900. Masuk Januari 2026.", "phone_norm": "+60136107224", "note": "wasap.my link in comment"}];
+
+const pricePat = /RM?\s?([0-9]{1,2},?[0-9]{3}|[0-9]{3,4})(?:\.\d+)?|\b([1-9](?:\.[0-9])?)k\b/i;
+function extractPrice(msg){
+  const m = msg.match(pricePat);
+  if(!m) return {val:null, show:null};
+  if(m[2]) { const val = Math.round(parseFloat(m[2])*1000); return {val, show:`RM${val}`}; }
+  const num = m[1].replace(/,/g,'');
+  const val = parseInt(num,10);
+  return {val, show:`RM${val}`};
+}
+const locWords = ["Sanderling Lakefront Residence","Lakefront Homes","Lakefront PR1MA","Casa Green","Solstice Pangea","Aspire Residence","Aspire Residensi","Kita Bayu","Cyberjaya","Cybersouth","Sanderling","Cassia","Solstice","Lakefront","The Arc"];
+const locRe = new RegExp("(" + locWords.map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join("|") + ")", "i");
+function extractLoc(msg){
+  const m = msg.match(locRe);
+  return m? m[1] : null;
+}
+function digits(s){ return (s||'').replace(/\D/g,''); }
+
+const KEY = "mr_leads_v1";
+function load(){
+  try { return JSON.parse(localStorage.getItem(KEY)) || {added:[], edited:{}, archived:[]}; }
+  catch(e){ return {added:[], edited:{}, archived:[]}; }
+}
+function save(state){ localStorage.setItem(KEY, JSON.stringify(state)); }
+
+let state = load();
+
+function baseItems(){
+  return SEED.map((r,i)=>({id:"seed-"+i, ...r}));
+}
+function combinedItems(){
+  const base = baseItems();
+  base.forEach(it=>{ if(state.edited[it.id]) Object.assign(it, state.edited[it.id]); });
+  const archivedIds = new Set(state.archived);
+  const list = base.filter(it=>!archivedIds.has(it.id)).concat(state.added.filter(it=>!archivedIds.has(it.id)));
+  return list;
+}
+
+function render(){
+  const listEl = document.getElementById('list');
+  const archWrap = document.getElementById('archived-wrap');
+  const archEl = document.getElementById('archived');
+  listEl.innerHTML=''; archEl.innerHTML='';
+
+  const items = combinedItems();
+  document.getElementById('count').textContent = `(${items.length})`;
+
+  const q = (document.getElementById('q').value||'').toLowerCase();
+  const sortVal = document.getElementById('sort').value;
+
+  let shown = items.map(it=>decorate(it))
+                   .filter(it => (it.name + ' ' + it.message + ' ' + (it.loc||'')).toLowerCase().includes(q));
+
+  if(sortVal.startsWith('price')){
+    shown.sort((a,b)=>{const pa=a.priceVal||0,pb=b.priceVal||0; return sortVal==='price-asc'? pa-pb : pb-pa;});
+  }
+
+  shown.forEach(it=> listEl.appendChild(card(it)));
+
+  const archIds = new Set(state.archived);
+  const archived = baseItems().concat(state.added).filter(it=>archIds.has(it.id)).map(it=>decorate(it));
+  archived.forEach(it=> archEl.appendChild(card(it,true)));
+  archWrap.classList.toggle('hidden', archived.length===0);
+}
+
+function decorate(it){
+  const p = extractPrice(it.message||'');
+  const loc = extractLoc(it.message||'');
+  return {...it, priceVal:p.val, priceShow:p.show, loc};
+}
+
+function icon(name){
+  if(name==='edit') return `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.03 0-1.42L18.37 3.29a1 1 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z"/></svg>`;
+  if(name==='archive') return `<svg viewBox="0 0 24 24"><path d="M20.54 5.23 19.15 3.5c-.37-.46-.92-.75-1.52-.75H6.38c-.6 0-1.15.29-1.52.75L3.46 5.23A2 2 0 0 0 3 6.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.5c0-.5-.17-.98-.46-1.27zM6.24 5h11.52l.81 1H5.44l.8-1zM19 19H5V8h14v11zm-5-7h-4v2h4v-2z"/></svg>`;
+  if(name==='unarchive') return `<svg viewBox="0 0 24 24"><path d="M20.54 5.23 19.15 3.5c-.37-.46-.92-.75-1.52-.75H6.38c-.6 0-1.15.29-1.52.75L3.46 5.23A2 2 0 0 0 3 6.5V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.5c0-.5-.17-.98-.46-1.27zM6.24 5h11.52l.81 1H5.44l.8-1zM19 19H5V8h14v11zM9 14h6v-2H9v2z"/></svg>`;
+  return '';
+}
+
+function card(it, isArchived=false){
+  const el = document.createElement('article');
+  el.className='card';
+  el.dataset.price = it.priceVal || '';
+  el.dataset.loc = (it.loc||'').toLowerCase();
+  el.innerHTML = `
+  <header class="card-head">
+    <div class="title">
+      <div class="name">${escapeHtml(it.name||'Unknown')}</div>
+      <div class="chips">
+        ${it.loc? `<span class="chip chip-loc">${escapeHtml(it.loc)}</span>`:''}
+        ${it.priceShow? `<span class="chip chip-price">${escapeHtml(it.priceShow)}</span>`:''}
+        ${it.note? `<span class="chip chip-note">${escapeHtml(it.note)}</span>`:''}
+      </div>
+    </div>
+    <div class="actions">
+      ${it.phone_norm? `<a class="btn" href="tel:${it.phone_norm}">Call</a>`:''}
+      ${it.phone_norm? `<a class="btn outline" target="_blank" href="https://wa.me/${digits(it.phone_norm)}">Chat</a>`:''}
+      <button class="iconbtn" data-act="edit" data-id="${it.id}" title="Edit">${icon('edit')}</button>
+      <button class="iconbtn ${isArchived?'ok':'danger'}" data-act="${isArchived?'unarchive':'archive'}" data-id="${it.id}" title="${isArchived?'Unarchive':'Archive'}">${icon(isArchived?'unarchive':'archive')}</button>
+    </div>
+  </header>
+  <p class="msg">${escapeHtml(it.message||'')}</p>
+  `;
+  return el;
+}
+
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[ch]));
+}
+
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('sort').addEventListener('change', render);
+
+const modal = document.getElementById('modal');
+document.getElementById('open-add').addEventListener('click', ()=> modal.classList.add('open'));
+document.getElementById('close-modal').addEventListener('click', ()=> modal.classList.remove('open'));
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.remove('open'); });
+
+document.getElementById('add').addEventListener('click', ()=>{
+  const name = document.getElementById('name').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const note = document.getElementById('note').value.trim();
+  if(!name && !message) return;
+  const id = "new-"+Date.now();
+  state.added.push({id, name, message, phone_norm: phone, note});
+  save(state);
+  document.getElementById('name').value='';
+  document.getElementById('message').value='';
+  document.getElementById('phone').value='';
+  document.getElementById('note').value='';
+  modal.classList.remove('open');
+  render();
+});
+
+function openEditor(id){
+  const listEl = document.getElementById('list');
+  const items = baseItems().concat(state.added);
+  const it = items.find(x=>x.id===id);
+  if(!it) return;
+  const edited = state.edited[id] || {};
+  const cur = Object.assign({}, it, edited);
+
+  const form = document.createElement('div');
+  form.className='card';
+  form.innerHTML = `
+    <h3 style="margin-top:0">Edit Lead</h3>
+    <div class="form">
+      <input id="e_name" type="text" value="${escapeHtml(cur.name||'')}">
+      <input id="e_message" type="text" value="${escapeHtml(cur.message||'')}">
+      <input id="e_phone" type="text" value="${escapeHtml(cur.phone_norm||'')}">
+      <input id="e_note" type="text" value="${escapeHtml(cur.note||'')}">
+      <div class="form-actions">
+        <button class="btn outline" id="e_cancel">Cancel</button>
+        <button class="btn ok" id="e_save">Save</button>
+      </div>
+    </div>
+  `;
+  listEl.prepend(form);
+
+  form.querySelector('#e_save').onclick = ()=>{
+    const patch = {
+      name: form.querySelector('#e_name').value.trim(),
+      message: form.querySelector('#e_message').value.trim(),
+      phone_norm: form.querySelector('#e_phone').value.trim(),
+      note: form.querySelector('#e_note').value.trim(),
+    };
+    const idx = state.added.findIndex(x=>x.id===id);
+    if(idx>=0){ state.added[idx] = {...state.added[idx], ...patch}; }
+    else { state.edited[id] = patch; }
+    save(state);
+    form.remove();
+    render();
+  };
+  form.querySelector('#e_cancel').onclick = ()=> form.remove();
+}
+
+document.getElementById('list').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const act = btn.getAttribute('data-act');
+  if(!act) return;
+  const id = btn.getAttribute('data-id');
+  if(act==='archive'){ state.archived.push(id); save(state); render(); }
+  if(act==='unarchive'){ state.archived = state.archived.filter(x=>x!==id); save(state); render(); }
+  if(act==='edit'){ openEditor(id); }
+});
+document.getElementById('archived').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const act = btn.getAttribute('data-act');
+  if(!act) return;
+  const id = btn.getAttribute('data-id');
+  if(act==='unarchive'){ state.archived = state.archived.filter(x=>x!==id); save(state); render(); }
+  if(act==='edit'){ openEditor(id); }
+});
+
+document.getElementById('toggle-archived').addEventListener('click', (e)=>{
+  const wrap = document.getElementById('archived-wrap');
+  wrap.classList.toggle('hidden');
+  e.target.textContent = wrap.classList.contains('hidden') ? 'Show Archived' : 'Hide Archived';
+});
+
+document.getElementById('export').addEventListener('click', ()=>{
+  const payload = {seed: SEED, state};
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mencari-rumah-export.json';
+  a.click();
+});
+
+// Initialize when DOM is ready
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', render);
+} else {
+  setTimeout(render, 100);
+}
+</script>
+</body>
+</html>
