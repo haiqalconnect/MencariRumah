@@ -49,16 +49,23 @@ select{padding:10px 12px; border-radius:12px; border:1px solid #24314d; backgrou
 .msg{color:#d7def7; margin:0; font-size:clamp(14px, 3vw, 16px)}
 .count{opacity:.8; font-size:14px}
 
+.card-footer{display:flex; align-items:center; justify-content:space-between; margin-top:12px}
+.card-buttons{display:flex; gap:6px; flex-wrap:wrap; flex:1}
+.card-buttons .btn{flex:1; min-width:80px; padding:10px 12px; font-size:14px}
+.card-icons{display:flex; gap:4px}
+
+.actions{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+.actions .btn{flex:1; min-width:80px; padding:10px 12px; font-size:14px}
+.actions .iconbtn{flex-shrink:0}
+
 .form{display:flex; gap:8px; flex-direction:column; margin:10px 0 18px}
 .form input{width:100%; padding:12px; border-radius:12px; border:1px solid #24314d; background:#0e1424; color:var(--text); font-size:16px; -webkit-appearance:none; appearance:none}
 .form-actions{display:flex; gap:8px; flex-wrap:wrap}
 .form-actions .btn{flex:1; min-width:100px}
 .hidden{display:none}
-.controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
 
 .section-head{display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px; flex-wrap:wrap; gap:12px}
 
-.actions{display:flex; gap:6px; align-items:center}
 .iconbtn{background:none; border:none; color:var(--text); cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center; border-radius:8px; transition:background .2s; -webkit-tap-highlight-color:transparent; min-height:44px; min-width:44px}
 .iconbtn:hover{background:rgba(255,255,255,.1)}
 .iconbtn:active{background:rgba(255,255,255,.2)}
@@ -66,51 +73,57 @@ select{padding:10px 12px; border-radius:12px; border:1px solid #24314d; backgrou
 .iconbtn.danger{color:var(--danger)}
 .iconbtn.ok{color:var(--ok)}
 
-.fab{position:fixed; right:16px; bottom:16px; width:56px; height:56px; border-radius:50%; background:var(--ok); color:#00361a; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); z-index:30; font-size:28px; font-weight:bold; -webkit-tap-highlight-color:transparent}
+.fab{position:fixed; right:16px; bottom:16px; width:56px; height:56px; border-radius:50%; background:var(--ok); color:#00361a; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.3); z-index:30; font-size:28px; font-weight:bold; -webkit-tap-highlight-color:transparent; transition:transform .2s}
 .fab:active{transform:scale(.95)}
 
 .modal-overlay{position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:40; display:none; align-items:flex-end; -webkit-user-select:none; user-select:none}
 .modal-overlay.open{display:flex}
 .modal-content{background:var(--card); border-top:1px solid #1f2638; border-radius:20px 20px 0 0; width:100%; max-width:600px; padding:20px; max-height:90vh; overflow-y:auto; -webkit-user-select:auto; user-select:auto}
+.modal-content h3{margin:0 0 16px 0; font-size:18px}
 .modal-content .form-actions{justify-content:flex-end}
 
 @media (max-width:480px){
-  .wrap{margin:24px auto 100px; padding:0 12px}
+  .wrap{margin:24px auto 120px; padding:0 12px}
   .toolbar{padding:8px 12px}
   .toolbar .inner{gap:6px; flex-direction:column}
-  input[type=search], input[type=text]{min-width:unset; font-size:16px; width:100%}
+  input[type=search], input[type=text]{font-size:16px; width:100%}
   select{width:100%; font-size:16px}
-  .btn{padding:10px 12px; font-size:13px; min-height:44px; width:100%}
+  .btn{padding:10px 12px; font-size:13px; min-height:44px}
   .section-head{flex-direction:column; align-items:stretch; gap:8px}
-  .controls{flex-direction:column}
-  .controls input{width:100%}
-  .card{padding:12px; margin:8px 0; border-radius:12px}
+  .card{padding:14px; margin:10px 0; border-radius:14px}
   .card-head{flex-direction:column; gap:8px}
   .title{flex-direction:column; gap:6px}
-  .name{font-size:15px; font-weight:600}
-  .chips{gap:4px}
-  .chip{padding:4px 8px; font-size:11px}
-  .msg{font-size:13px; line-height:1.4; margin-top:8px}
-  .count{font-size:13px}
-  .actions{gap:4px; flex-wrap:wrap}
-  .btn{padding:8px 10px; font-size:12px}
-  .iconbtn{width:40px; height:40px; padding:0; min-width:40px; min-height:40px}
-  .iconbtn svg{width:18px; height:18px}
-  .fab{width:50px; height:50px; font-size:24px; bottom:20px; right:12px}
-  .modal-content{border-radius:20px 20px 0 0; padding:16px}
+  .name{font-size:16px; font-weight:600}
+  .chips{gap:6px; margin-top:6px}
+  .chip{padding:6px 10px; font-size:12px}
+  .msg{font-size:14px; line-height:1.5; margin-top:10px; color:#d7def7}
+  .card-footer{margin-top:12px}
+  .card-buttons{gap:8px}
+  .card-buttons .btn{flex:1; min-width:100%; padding:12px 14px; font-size:13px; border-radius:10px}
+  .card-icons{gap:6px}
+  .iconbtn{width:44px; height:44px; min-width:44px; min-height:44px}
+  .iconbtn svg{width:20px; height:20px}
+  .fab{width:54px; height:54px; font-size:26px; bottom:24px; right:16px}
+  .modal-overlay{align-items:flex-end}
+  .modal-content{border-radius:20px 20px 0 0; padding:16px; width:100%}
   .modal-content h3{margin:0 0 12px 0; font-size:16px}
-  .form input{padding:11px; font-size:16px; border-radius:10px}
-  .form{gap:6px; margin:8px 0 12px}
-  .form-actions{gap:6px}
-  .form-actions .btn{flex:1; padding:10px 8px; font-size:12px}
+  .form input{padding:12px; font-size:16px; border-radius:10px}
+  .form{gap:8px; margin:12px 0 16px}
+  .form-actions{gap:8px}
+  .form-actions .btn{flex:1; padding:12px 14px; font-size:13px}
 }
 
 @media (max-width:360px){
-  .wrap{padding:0 10px}
-  .card{padding:10px}
-  .name{font-size:14px}
-  .msg{font-size:12px}
-  .btn{padding:8px 8px; font-size:11px}
+  .wrap{padding:0 10px; margin:20px auto 110px}
+  .card{padding:12px}
+  .name{font-size:15px}
+  .msg{font-size:13px}
+  .card-buttons .btn{padding:10px 12px; font-size:12px}
+}
+
+@media (min-width:700px){
+  .modal-overlay.open{justify-content:center; align-items:center}
+  .modal-content{border-radius:16px; max-width:500px; width:90%; max-height:80vh}
 }
 </style>
 
@@ -257,14 +270,18 @@ function card(it, isArchived=false){
         ${it.note? `<span class="chip chip-note">${escapeHtml(it.note)}</span>`:''}
       </div>
     </div>
-    <div class="actions">
+  </header>
+  <p class="msg">${escapeHtml(it.message||'')}</p>
+  <footer class="card-footer">
+    <div class="card-buttons">
       ${it.phone_norm? `<a class="btn" href="tel:${it.phone_norm}">Call</a>`:''}
       ${it.phone_norm? `<a class="btn outline" target="_blank" href="https://wa.me/${digits(it.phone_norm)}">Chat</a>`:''}
+    </div>
+    <div class="card-icons">
       <button class="iconbtn" data-act="edit" data-id="${it.id}" title="Edit">${icon('edit')}</button>
       <button class="iconbtn ${isArchived?'ok':'danger'}" data-act="${isArchived?'unarchive':'archive'}" data-id="${it.id}" title="${isArchived?'Unarchive':'Archive'}">${icon(isArchived?'unarchive':'archive')}</button>
     </div>
-  </header>
-  <p class="msg">${escapeHtml(it.message||'')}</p>
+  </footer>
   `;
   return el;
 }
